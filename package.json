@@ -1,0 +1,8 @@
+{
+  "devDependencies": {
+    "election": "^0.0.0"
+  },
+  "dependencies": {
+    "electron": "^13.1.9"
+  }
+}
