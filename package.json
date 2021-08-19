@@ -19,5 +19,10 @@
   "license": "CC0-1.0",
   "devDependencies": {
     "electron": "^13.1.9"
+  },
+  "dependencies": {
+    "clipboard": "^2.0.8",
+    "clipboardy": "^2.3.0",
+    "timer.js": "^1.0.4"
   }
 }

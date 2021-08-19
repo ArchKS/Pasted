@@ -34,4 +34,17 @@ Electron进程
 
 - ipcMain.handle(channel,hander)，处理渲染进程的channel请求，在handler中return返回结果
 
-- 
+
+
+
+
+## ERROR
+1. 安装
+
+2. 在render.js中,如果直接使用require会报错，需要在main.js中引入
+  webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+  }
+
+
