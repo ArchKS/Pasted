@@ -23,6 +23,10 @@
   "dependencies": {
     "clipboard": "^2.0.8",
     "clipboardy": "^2.3.0",
+    "electron-clipboard-watcher": "^1.0.1",
+    "electron-store": "^8.0.0",
+    "mousetrap": "^1.6.5",
+    "mousetrap-global-bind": "^1.1.0",
     "timer.js": "^1.0.4"
   }
 }

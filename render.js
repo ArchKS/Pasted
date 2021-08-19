@@ -1,38 +1,23 @@
-const {ipcRenderer} = require("electron");
-const Timer  = require("timer.js");
-const clipboardy = require('clipboardy');
+const { ipcRenderer } = require("electron");
 
+ipcRenderer.send('CONNECT', '')
+ipcRenderer.on("msg", (e, v) => { console.log(v); })
 
-function startWork(){
-    let workTimer = new Timer({
-        ontick: (ms)=>{
-            updateTime(ms); // 进入 更新时间
-        },
-        onend: ()=>{
-            notifiication(); // 结束发送通知
-        }
-    })
-    workTimer.start(3);
+ipcRenderer.on("clipboard-history", (e, v) => {
+    renderPageList(document.querySelector("#root"), v);
+})
+
+ipcRenderer.on("refresh", (e, v) => {
+    console.log("refresh ??? ");
+    renderPageList(document.querySelector("#root"), v);
+})
+
+function renderPageList(root, history) {
+    root.innerHTML = `
+    ${history.map((item, index) => {
+        return `
+            <div class="item">${item}</div>
+        `
+    }).join('')}
+    `
 }
-
-
-function updateTime(ms){
-    let timerContainer = document.getElementById("timer-container");
-    let mm = Math.round(ms / 1000);
-    timerContainer.innerHTML = clipboardy.readSync();;
-}
-
-async function notifiication(){
-    let res = await ipcRenderer.invoke('work-notification');
-    console.log(res);
-    if(res === 'rest'){
-        setTimeout(() => {
-            alert("休息");
-        }, 5 * 1000);
-    }else if(res =="work"){
-        startWork()
-    }
-}
-
-
-startWork();

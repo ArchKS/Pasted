@@ -1,64 +1,92 @@
-const { app, BrowserWindow, Notification, ipcMain,globalShortcut,dialog } = require("electron");
-const path = require("path");
+const
+    { app,
+        BrowserWindow,
+        globalShortcut,
+        ipcMain,
+    } = require("electron");
+const clipboardWatcher = require('electron-clipboard-watcher')
+const Sotre = require('electron-store');
+const storeInstance = new Sotre();
+const STOREKEY = "history";
+
+function readClipboardHistoryFromStore() {
+    return storeInstance.get(STOREKEY);
+}
+
+
 let win;
+let _flag_win = false;
+let renderWin;
+const watcher = clipboardWatcher({
+    // (optional) delay in ms between polls
+    watchDelay: 1000,
+    // handler for when image data is copied into the clipboard
+    onImageChange: function (nativeImage) {
+        console.log(nativeImage);
+    },
+    // handler for when text data is copied into the clipboard
+    onTextChange: function (text) {
+        console.log(text);
+        let list = storeInstance.get(STOREKEY);
+        list.unshift(text);
+        storeInstance.set({ STOREKEY: list });
+        renderWin.reply('refresh',list)
+    }
+})
 
-app.whenReady().then(()=>{
-    const retc = globalShortcut.register("CommandOrControl+C",(evt)=>{
-        console.log("CommandOrControl+C is pressed",evt);
-    })
-
-    const reto = globalShortcut.register("CommandOrControl+Shift+O",()=>{
-        console.log("CommandOrControl+Shift+O is pressed");
-    })
-
-    console.log(globalShortcut.isRegistered("CommandOrControl+C"));
+// 注册打开面板事件
+app.whenReady().then(() => {
+    const registryKeyOne = globalShortcut.register("CommandOrControl+Shift+O", () => {
+        _flag_win = !_flag_win;
+        if (_flag_win) {
+            win.show();
+        } else {
+            win.hide();
+        }
+    });
+    if (!registryKeyOne) console.log("registry key shortcuts error!");
 })
 
 app.on('ready', () => {
     win = new BrowserWindow({
         width: 500,
-        height: 400,
-        x: 100,
-        y: 300,
+        height: 300,
+        x: 300,
+        y: 800,
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
         }
     })
-    
+
     win.loadFile('index.html');
+    // open dev tools
     win.webContents.openDevTools();
-    // handleIPC();
+    // hide
+    // win.hide();
+    // 将历史记录发送到面板中
+    win.webContents.send('m', 'hello');
+    init();
+
 })
 
 
-app.on('window-all-closed',()=>{
-    globalShortcut.unregister("CommandOrControl+X");
+app.on('window-all-closed', () => {
     globalShortcut.unregisterAll();
+    watcher.stop();
 })
 
-function handleIPC() {
-    ipcMain.handle("work-notification", async function () {
-        let res = await new Promise((resolve, reject) => {
-            let notification = new Notification({
-                title: "任务结束",
-                body: '是否开始休息',
-                silent: true,
-                actions: [{ text: "开始休息", type: "button" }],
-                closeButtonText: '继续工作'
-            })
-
-            notification.show();
-            notification.on('action', () => {
-                resolve('rest');
-            });
-            notification.on('close', () => {
-                resolve('work');
-            });
-        });
-
-        return res;
-    })
-
+function init() {
+    // 渲染进程先和主进程建立联系
+    connected(() => {
+        // renderWin.reply("msg","hello");
+        renderWin.reply("clipboard-history", readClipboardHistoryFromStore());
+    });
 }
 
+function connected(callback) {
+    ipcMain.on("CONNECT", (event, arg) => {
+        renderWin = event;
+        callback();
+    })
+}
