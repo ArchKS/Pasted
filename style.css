@@ -1,0 +1,92 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+#root {
+    width: 100%;
+    height: 100vh;
+    background-color:#23235B;
+    color: white;
+    overflow-y: scroll;
+}
+
+#root .title {
+    color: white;
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#root .input-wrapper {
+    margin-top: 20px;
+    position: relative;
+    width: 100%;
+    height: 44px;
+}
+#root .input-wrapper .pos {
+    position: absolute;
+    width: 80%;
+    height: 100%;
+    top: 0px;
+    right: 50%;
+    transform: translate(50%,0);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#root .input-wrapper .pos input {
+    outline: none;
+    border: none;
+    height: 100%;
+    padding: 0 10px;
+    font-size: 16px;
+    background-color: #000;
+    color: white;
+}
+#root .input-wrapper .pos .clear {
+    width: 44px;
+    height: 100%;
+    background-color: #3B3B98;
+    color: white;
+    cursor: pointer;
+    white-space: nowrap;
+    position: absolute;
+    right: 10px;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#root .list_wrapper {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+}
+#root .list_wrapper .item-wrapper {
+    border: 1px solid #eee;
+    height: 34px;
+    width: 80%;
+    display: flex;
+    align-items: center;
+}
+
+#root .list_wrapper .item-wrapper .item {
+    width: 100%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow:hidden;
+    font-size: 12px;
+    margin: 0 14px;
+    cursor: pointer;
+}
+
+#root .list_wrapper .item-wrapper:hover,
+#root .list_wrapper .item-wrapper.focus{
+    background-color: #fff;
+    color: #000;
+}
