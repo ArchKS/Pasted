@@ -1,4 +1,4 @@
-Electron进程
+# Electron进程
 
 ![image-20210817100801532](img/image-20210817100801532.png)
 
@@ -38,13 +38,12 @@ Electron进程
 
 
 
-## ERROR
+# ERROR
 1. 安装
 
 2. 在render.js中,如果直接使用require会报错，需要在main.js中引入
-  webPreferences: {
+    webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
-  }
-
+    }
 

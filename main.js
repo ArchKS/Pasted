@@ -7,16 +7,12 @@ const
         Notification
     } = require("electron");
 const clipboardWatcher = require('electron-clipboard-watcher');
-
-
 const {storeClipboard,registryShortcuts} = require("./js/util");
 const  _clipStore = new storeClipboard();
-
-
-
 let win;
-
 let renderWin;
+
+
 
 const watcher = clipboardWatcher({
     watchDelay: 1000,
@@ -30,28 +26,6 @@ const watcher = clipboardWatcher({
     }
 })
 
-
-app.on('ready', () => {
-    win = new BrowserWindow({
-        width: 1200,
-        height: 500,
-        x: 12000,
-        y: 200,
-        webPreferences: {
-            nodeIntegration: true,
-            contextIsolation: false,
-        }
-    })
-    win.loadFile('index.html');
-    win.webContents.openDevTools();
-    init();
-    
-})
-
-
-app.on('window-all-closed', () => {
-    stop();
-})
 
 function init() {
     // 注册键盘事件
@@ -113,3 +87,27 @@ function stop(){
     globalShortcut.unregisterAll();
     watcher.stop();
 }
+
+
+
+app.on('ready', () => {
+    win = new BrowserWindow({
+        width: 1200,
+        height: 500,
+        x: 12000,
+        y: 200,
+        webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: false,
+        }
+    })
+    win.loadFile('index.html');
+    win.webContents.openDevTools();
+    init();
+    
+})
+
+
+app.on('window-all-closed', () => {
+    stop();
+})

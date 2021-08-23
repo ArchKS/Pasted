@@ -9,6 +9,7 @@ textarea {
     border: none;
     resize: none;
     /* resize:vertical; */
+    line-height: 40px;
 }
 
 #root {
@@ -37,9 +38,12 @@ textarea {
     flex-direction: column;
     width: 100%;
     cursor: pointer;
+   
     /* overflow: hidden; */
 }
-
+#root .list_wrapper .item-wrapper:last-child{
+    box-shadow: 0 4px 2px rgba(0, 0, 0, .14);
+}
 
 #root .list_wrapper .item-wrapper {
     border: 1px solid #333;
@@ -47,20 +51,17 @@ textarea {
     width: 80%;
     display: flex;
     align-items: center;
+    
     /* overflow: hidden; */
 }
 
 #root .list_wrapper .item-wrapper .item {
     width: 100%;
     height: 100%;
-    /* white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow:hidden; */
+    padding-left: 10px;
     font-size: 12px;
-    margin: 0 0 0 14px;
+    margin: 0 14px 0 0;
     cursor: pointer;
-    display: flex;
-    align-items: center;
 }
 
 
@@ -70,7 +71,12 @@ textarea {
     cursor: pointer;
 } */
 #root .list_wrapper .item-wrapper.focus{
-    background-color: #3EB365;
+    background-color: #77AF9C;
     color: #000;
     cursor: pointer;
+}
+
+#root .list_wrapper .item-wrapper.focus .item {
+    background-color: #6E7783;
+    color: #FFFFF3;
 }

@@ -50,6 +50,7 @@ function renderPageList(root, history) {
 // 清除历史剪切板
 function bindClearHistoryEvt() {
     let clearDOM = document.querySelector("#root .clear");
+    if(!clearDOM) return;
     clearDOM.addEventListener("click", () => {
         ipcRenderer.send('clear-clipboard-history', '');
     })
@@ -148,6 +149,7 @@ function ifUpDown(flag = true) {
     }
     currentIndex = Number(currentIndex); // 转义，不这么写会出现 item-01
     document.querySelector(`.item-wrapper.item-${currentIndex}`).classList.add("focus");
+    scrollToFocus(); // 判断focus是否滑出屏幕
 
 }
 
@@ -175,9 +177,29 @@ function delSingleHistory() {
     if (index == HISTORY_LIST_LENGTH - 1) {
         currentIndex = index - 1
     } else {
-        currentIndex = index;
+        currentIndex = index - 1;
     }
 }
+
+
+// 判断focus元素距离顶部｜底部的距离
+function scrollToFocus(){
+    let dom = document.querySelector(".focus");
+    if(!dom) return;
+    let windowHeight = window.innerHeight;
+    let rectDis = dom.getBoundingClientRect();
+    let top = rectDis.top;
+
+    if(top > windowHeight - rectDis.height){ // 超出屏幕
+        document.querySelector("#root").scrollTo(0,top);
+        console.log("chao chu pingmu");
+
+    }else if(top< 0 ){
+        document.querySelector("#root").scrollTo(0,top);
+    }
+    console.log(rectDis.top,rectDis.bottom,rectDis.y);
+}
+
 
 
 init();
