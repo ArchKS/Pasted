@@ -3,6 +3,8 @@ const
         BrowserWindow,
         globalShortcut,
         ipcMain,
+        clipboard,
+        Notification
     } = require("electron");
 const clipboardWatcher = require('electron-clipboard-watcher');
 
@@ -22,25 +24,27 @@ const watcher = clipboardWatcher({
         console.log(nativeImage);
     },
     onTextChange: function (text) {
-        _clipStore.add(text);
-        renderWin.reply('refresh',_clipStore.get());
+        if(_clipStore.get().indexOf(text) == -1){ // 如果数组中不存在当前复制的内容
+            _clipStore.add(text);
+            renderWin.reply('refresh',_clipStore.get());
+        }
     }
 })
 
 
 app.on('ready', () => {
     win = new BrowserWindow({
-        width: 800,
-        height: 700,
-        x: 1000,
-        y: 800,
+        width: 300,
+        height: 500,
+        x: 12000,
+        y: 200,
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
         }
     })
     win.loadFile('index.html');
-    win.webContents.openDevTools();
+    // win.webContents.openDevTools();
     init();
     
 })
@@ -60,16 +64,32 @@ function init() {
         renderWin.reply("clipboard-history", _clipStore.get());
 
         // 注册清楚历史命令的事件
-        clearHistory();
+        listener();
     });
 }
 
 
-function clearHistory(){
+function listener(){
+    // 清除历史命令
     ipcMain.on('clear-clipboard-history',(evt,arg)=>{
         _clipStore.clear();
         renderWin.reply('refresh',_clipStore.get());
     });
+
+
+    // 将用户复制打入到剪切板
+    ipcMain.on("insert-into-clipboard",(evt,arg)=>{
+        if(typeof arg === 'string'){
+            clipboard.writeText(arg);
+        }
+
+        new Notification(
+            { 
+            title: "复制成功",
+            body: arg ,
+            silent: true
+            }).show()
+    })
 }
 
 

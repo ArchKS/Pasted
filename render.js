@@ -28,11 +28,37 @@ function bindClearHistoryEvt() {
 
 }
 
+function clickItemWrapperEvt() {
+    let listWrapper = document.querySelector(".list_wrapper");
+    console.log(listWrapper);
+    listWrapper.addEventListener('click', e => {
+        let target = e.target;
+        let classList = target.classList;
+        let nodeName = target.nodeName;
+        if (classList.contains("item-wrapper") && nodeName === "DIV") {
+            removeAllFocus()
+            target.classList.add('focus');
+            enterToCopy();
+        } else if (classList.contains("item") && nodeName === "DIV") {
+            removeAllFocus()
+            target.parentNode.classList.add('focus');
+            enterToCopy();
+        }
+
+
+    })
+}
+
+function removeAllFocus() {
+    let items = document.querySelectorAll(".item-wrapper");
+    items.forEach(v => v.classList.remove("focus"));
+}
+
 
 function init() {
-    // 绑定清楚历史记录按钮事件
-    bindClearHistoryEvt();
-    pageKeyboard();
+    bindClearHistoryEvt(); // 绑定清楚历史记录按钮事件
+    pageKeyboard();     // 绑定上下选中按钮
+    clickItemWrapperEvt(); //绑定点击事件
 
     // 绑定获取历史剪切板事件
     ipcRenderer.on("clipboard-history", (e, v) => {
@@ -48,6 +74,7 @@ function init() {
 const DOWN = "ArrowDown";
 const UP = "ArrowUp"
 const TAB = "Tab";
+const ENTER = "Enter"
 let currentIndex = 0;
 
 function pageKeyboard() {
@@ -64,7 +91,10 @@ function pageKeyboard() {
                 ifUpDown(true);
                 break;
             case TAB:
-                console.log(TAB);
+                ifUpDown(false);
+                break;
+            case ENTER:
+                enterToCopy()
                 break;
             default:
                 break;
@@ -81,15 +111,25 @@ function ifUpDown(flag = true) {
         if (index === currentIndex) {
             item.classList.add('focus');
         }
-    })
+    });
     if (flag) { // 向上
         currentIndex -= 1;
         if (currentIndex < 0) currentIndex = 0;
     } else { // 向下
         currentIndex += 1;
-        if (currentIndex = HISTORY_List_Lenght) currentIndex -= 1;
+        if (currentIndex === HISTORY_List_Lenght) currentIndex -= 1;
     }
 }
 
+
+function enterToCopy() {
+    let enterDOM = document.querySelectorAll(".item-wrapper.focus");
+    if (enterDOM.length == 1) {
+        let content = enterDOM[0].querySelector(".item").innerHTML;
+        ipcRenderer.send("insert-into-clipboard", content)
+        console.log(`成功复制： ${content}`);
+    }
+    removeAllFocus()
+}
 
 init();
