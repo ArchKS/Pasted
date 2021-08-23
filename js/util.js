@@ -6,13 +6,23 @@ exports.storeClipboard = class storeClipboard {
     KEY = "HISTORY";
     constructor() {
     }
-    add(newContent) {
+    add(text) {
         if (storeInstance.has(this.KEY)) {
             let list = storeInstance.get(this.KEY) || [];
-            list.unshift(newContent);
-            storeInstance.set(this.KEY, list);
+            // 去重
+            let flag = true;
+            let rawList= this.get().map(item=>item.replace(/[ \n]/ig,''));
+            if(rawList.indexOf(text.replace(/[ \n]/ig,'')) !== -1){ // 如果数组中不存在当前复制的内容
+                flag = false;
+            }
+            console.log('1',text,false);
+            
+            if(flag){
+                list.unshift(text);
+                storeInstance.set(this.KEY, list);
+            }
         } else {
-            storeInstance.set(this.KEY, [newContent]);
+            storeInstance.set(this.KEY, [text]);
         }
     }
 
@@ -27,6 +37,10 @@ exports.storeClipboard = class storeClipboard {
         } else {
             return [];
         }
+    }
+
+    reset(list){
+        storeInstance.set(this.KEY,list);
     }
 }
 

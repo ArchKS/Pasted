@@ -24,17 +24,16 @@ const watcher = clipboardWatcher({
         console.log(nativeImage);
     },
     onTextChange: function (text) {
-        if(_clipStore.get().indexOf(text) == -1){ // 如果数组中不存在当前复制的内容
-            _clipStore.add(text);
-            renderWin.reply('refresh',_clipStore.get());
-        }
+        _clipStore.add(text);
+        renderWin.reply('refresh',_clipStore.get());
+        
     }
 })
 
 
 app.on('ready', () => {
     win = new BrowserWindow({
-        width: 300,
+        width: 1200,
         height: 500,
         x: 12000,
         y: 200,
@@ -44,7 +43,7 @@ app.on('ready', () => {
         }
     })
     win.loadFile('index.html');
-    // win.webContents.openDevTools();
+    win.webContents.openDevTools();
     init();
     
 })
@@ -89,6 +88,14 @@ function listener(){
             body: arg ,
             silent: true
             }).show()
+    });
+
+    // 删除单个历史剪切板
+    ipcMain.on('delete-single-item',(evt,arg)=>{
+        let list = _clipStore.get();
+        list.splice(arg,1);
+        _clipStore.reset(list);
+        renderWin.reply('refresh',_clipStore.get()); // 刷新剪切板
     })
 }
 
