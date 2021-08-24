@@ -6,10 +6,9 @@
   "scripts": {
     "start": "electron .",
     "watch": "nodemon --watch . --exec electron .",
-    "dist": "electron-builder",
-    "package-mac": "electron-packager . clipboard --overwrite --platform=darwin --arch=x64 --icon=icon.icns --prune=true --out=release-builds",
-    "package-win": "electron-packager . clipboard --overwrite --asar --platform=win32 --arch=ia32 --icon=icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Electron Tutorial App\"",
-    "package-linux": "electron-packager . clipboard --overwrite --asar --platform=linux --arch=x64 --icon=icon.ico --prune=true --out=release-builds"
+    "package-mac": "electron-packager . zclipboard --overwrite --platform=darwin --arch=x64 --icon=./assets/icon.icns  --prune=true --out=release",
+    "package-win": "electron-packager . zclipboard  --platform=win32 --arch=ia32 --icon=./assets/icon.ico --prune=true --out=release",
+    "package-linux": "electron-packager . zclipboard  --platform=linux --arch=x64 --icon=./assets/icon.ico --prune=true --out=release"
   },
   "repository": "https://github.com/electron/electron-quick-start",
   "keywords": [
@@ -33,33 +32,5 @@
     "electron-store": "^8.0.0",
     "mousetrap": "^1.6.5",
     "mousetrap-global-bind": "^1.1.0"
-  },
-  "build": {
-    "appId": "org.zulip.zulip-electron",
-    "category": "Chat;GNOME;GTK;Network;InstantMessaging",
-    "dmg": {
-      "contents": [
-        {
-          "x": 110,
-          "y": 150
-        },
-        {
-          "x": 240,
-          "y": 150,
-          "type": "link",
-          "path": "/Applications"
-        }
-      ]
-    },
-    "linux": {
-      "target": [
-        "AppImage",
-        "deb"
-      ]
-    },
-    "win": {
-      "target": "squirrel",
-      "icon": "assets/icon.ico"
-    }
   }
 }
