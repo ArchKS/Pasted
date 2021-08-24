@@ -15,6 +15,9 @@ exports.storeClipboard = class storeClipboard {
             if(rawList.indexOf(text.replace(/[ \n]/ig,'')) !== -1){ // 如果数组中不存在当前复制的内容
                 flag = false;
             }
+            if(String(text).trim() === ""){
+                flag= false;
+            }
             if(flag){
                 list.unshift(text);
                 storeInstance.set(this.KEY, list);

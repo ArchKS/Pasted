@@ -160,7 +160,7 @@ function enterToCopy() {
         let content = enterDOM[0].querySelector(".item").innerHTML;
         ipcRenderer.send("insert-into-clipboard", content)
     }
-    removeAllFocus()
+    removeAllFocus();
 }
 
 // 删除单个信息
@@ -191,15 +191,13 @@ function scrollToFocus(){
     let top = rectDis.top;
 
     if(top > windowHeight - rectDis.height){ // 超出屏幕
-        document.querySelector("#root").scrollTo(0,top);
+        document.querySelector("#root").scrollTo(0,top-100);
         console.log("chao chu pingmu");
 
     }else if(top< 0 ){
-        document.querySelector("#root").scrollTo(0,top);
+        document.querySelector("#root").scrollTo(0,top-100);
     }
-    console.log(rectDis.top,rectDis.bottom,rectDis.y);
 }
-
 
 
 init();

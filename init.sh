@@ -6,3 +6,8 @@ npm install && npm start
 export http.proxys=socks5://127.0.0.1:7777
 # unset proxy
 export http.proxys=
+
+
+npm i -g election-packager
+npm config set proxy=http://127.0.0.1:7776
+electron-packager .

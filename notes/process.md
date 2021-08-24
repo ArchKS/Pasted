@@ -38,6 +38,48 @@
 
 
 
+渲染进程之间的通信
+
+- ipcRender.sendTo  Electron5之后，remote模块特别影响性能
+
+render1.js
+
+```js
+const {ipcRender,remote} = require("electron");
+let shareObj = remote.getGlobal("sharedObject");
+let win2WebContentsId = shareObj.win2WebContentsId;
+ipcRender.sendTo(win2WebContentsId,'do-some-work',1);
+```
+
+render2.js
+
+```js
+const {ipcRender} = require("electron");
+ipcRender.on("do-some-work",(evt,arg)=>{
+  alert("render2 handle some work",arg);
+})
+```
+
+
+
+main.js
+
+```js
+win2 = new BrowserWindow({width: .....});
+win2.loadFile("./index2.html")
+global.shareObj = {
+  win2WebContentsId: win2.WebContents.Id
+}
+```
+
+
+
+- 少用remote模块
+- 不要用sync模式
+- 在请求+响应的通信模式下，需要自定义超时限制
+
+
+
 # ERROR
 1. 安装
 

@@ -6,7 +6,10 @@
   "scripts": {
     "start": "electron .",
     "watch": "nodemon --watch . --exec electron .",
-    "dist": "electron-builder"
+    "dist": "electron-builder",
+    "package-mac": "electron-packager . clipboard --overwrite --platform=darwin --arch=x64 --icon=icon.icns --prune=true --out=release-builds",
+    "package-win": "electron-packager . clipboard --overwrite --asar --platform=win32 --arch=ia32 --icon=icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Electron Tutorial App\"",
+    "package-linux": "electron-packager . clipboard --overwrite --asar --platform=linux --arch=x64 --icon=icon.ico --prune=true --out=release-builds"
   },
   "repository": "https://github.com/electron/electron-quick-start",
   "keywords": [
@@ -24,12 +27,12 @@
   },
   "dependencies": {
     "clipboard": "^2.0.8",
-    "clipboardy": "^2.3.0",
     "electron-clipboard-watcher": "^1.0.1",
+    "electron-installer-dmg": "^3.0.0",
+    "electron-packager": "^15.3.0",
     "electron-store": "^8.0.0",
     "mousetrap": "^1.6.5",
-    "mousetrap-global-bind": "^1.1.0",
-    "timer.js": "^1.0.4"
+    "mousetrap-global-bind": "^1.1.0"
   },
   "build": {
     "appId": "org.zulip.zulip-electron",
@@ -56,7 +59,7 @@
     },
     "win": {
       "target": "squirrel",
-      "icon": "build/icon.ico"
+      "icon": "assets/icon.ico"
     }
   }
 }

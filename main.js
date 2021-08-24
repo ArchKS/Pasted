@@ -12,6 +12,9 @@ const  _clipStore = new storeClipboard();
 let win;
 let renderWin;
 
+app.setLoginItemSettings({
+  openAtLogin: true, // 开机自启
+})
 
 
 const watcher = clipboardWatcher({
@@ -22,7 +25,6 @@ const watcher = clipboardWatcher({
     onTextChange: function (text) {
         _clipStore.add(text);
         renderWin.reply('refresh',_clipStore.get());
-        
     }
 })
 
@@ -92,7 +94,7 @@ function stop(){
 
 app.on('ready', () => {
     win = new BrowserWindow({
-        width: 1200,
+        width: 300,
         height: 500,
         x: 12000,
         y: 200,
@@ -102,7 +104,7 @@ app.on('ready', () => {
         }
     })
     win.loadFile('index.html');
-    win.webContents.openDevTools();
+    // win.webContents.openDevTools();
     init();
     
 })
