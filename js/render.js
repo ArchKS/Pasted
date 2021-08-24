@@ -30,7 +30,7 @@ function renderPageList(root, history) {
     ${set.map((item, index) => {
         return `
         <div class="item-wrapper item-${index}">
-            <textarea class="item item-${index}" rows="3"></textarea>
+            <textarea class="item item-${index} ${item.length < 30 ? 'center' : ''}" rows="3"></textarea>
         </div>
         `
     }).join('')}

@@ -9,7 +9,10 @@ textarea {
     outline: none;
     border: none;
     resize: none;
+    line-break: anywhere;
     /* resize:vertical; */
+}
+textarea.center {
     line-height: 40px;
 }
 
