@@ -7,14 +7,36 @@ const
         Notification
     } = require("electron");
 const clipboardWatcher = require('electron-clipboard-watcher');
-const {storeClipboard,registryShortcuts} = require("./js/util");
-const  _clipStore = new storeClipboard();
+const { storeClipboard, registryShortcuts } = require("./js/util");
+const _clipStore = new storeClipboard();
+const path = require("path");
 let win;
 let renderWin;
+const appFolder = path.dirname(process.execPath);
+const updateExe = path.resolve(appFolder, "..", "Update.exe");
+const exeName = path.basename(process.execPath);
 
-app.setLoginItemSettings({
-  openAtLogin: true, // 开机自启
-})
+// 开机自启
+function launchAtStartup() {
+  if (process.platform === "darwin") {
+    app.setLoginItemSettings({
+      openAtLogin: true,
+      openAsHidden: true
+    });
+  } else {
+    app.setLoginItemSettings({
+      openAtLogin: true,
+      openAsHidden: true,
+      path: updateExe,
+      args: [
+        "--processStart",
+        `"${exeName}"`,
+        "--process-start-args",
+        `"--hidden"`
+      ]
+    });
+  }
+}
 
 
 const watcher = clipboardWatcher({
@@ -24,7 +46,7 @@ const watcher = clipboardWatcher({
     },
     onTextChange: function (text) {
         _clipStore.add(text);
-        renderWin.reply('refresh',_clipStore.get());
+        renderWin.reply('refresh', _clipStore.get());
     }
 })
 
@@ -44,34 +66,34 @@ function init() {
 }
 
 
-function listener(){
+function listener() {
     // 清除历史命令
-    ipcMain.on('clear-clipboard-history',(evt,arg)=>{
+    ipcMain.on('clear-clipboard-history', (evt, arg) => {
         _clipStore.clear();
-        renderWin.reply('refresh',_clipStore.get());
+        renderWin.reply('refresh', _clipStore.get());
     });
 
 
     // 将用户复制打入到剪切板
-    ipcMain.on("insert-into-clipboard",(evt,arg)=>{
-        if(typeof arg === 'string'){
+    ipcMain.on("insert-into-clipboard", (evt, arg) => {
+        if (typeof arg === 'string') {
             clipboard.writeText(arg);
         }
 
         new Notification(
-            { 
-            title: "复制成功",
-            body: arg ,
-            silent: true
+            {
+                title: "复制成功",
+                body: arg,
+                silent: true
             }).show()
     });
 
     // 删除单个历史剪切板
-    ipcMain.on('delete-single-item',(evt,arg)=>{
+    ipcMain.on('delete-single-item', (evt, arg) => {
         let list = _clipStore.get();
-        list.splice(arg,1);
+        list.splice(arg, 1);
         _clipStore.reset(list);
-        renderWin.reply('refresh',_clipStore.get()); // 刷新剪切板
+        renderWin.reply('refresh', _clipStore.get()); // 刷新剪切板
     })
 }
 
@@ -85,7 +107,7 @@ function connected(callback) {
 }
 
 
-function stop(){
+function stop() {
     globalShortcut.unregisterAll();
     watcher.stop();
 }
@@ -106,7 +128,6 @@ app.on('ready', () => {
     win.loadFile('index.html');
     // win.webContents.openDevTools();
     init();
-    
 })
 
 
