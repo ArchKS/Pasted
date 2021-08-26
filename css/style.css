@@ -42,7 +42,6 @@ textarea.center {
     flex-direction: column;
     width: 100%;
     cursor: pointer;
-   
     /* overflow: hidden; */
 }
 #root .list_wrapper .item-wrapper:last-child{
